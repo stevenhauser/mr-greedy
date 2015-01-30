@@ -14,6 +14,8 @@ collect enough coins, you'll be greatly rewarded
 by the mysterious Mr. Smiley. You'll have to
 play to find out what happens when you catch him!
 
+[Watch the trailer!](http://stevenhauser.com/mr-greedy/)
+
 ## Hardware setup
 
 1. Get an Arduino.
