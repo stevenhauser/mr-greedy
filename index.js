@@ -55,9 +55,13 @@ board.on('ready', function() {
 
   controls.on('changed', player.move.bind(player));
 
-  var score = 0;
-  var winningScore = 10;
-  var refreshRate = 250;
+  // Set up in `intialize` below;
+  var score;
+  var winningScore;
+  var refreshRate;
+
+  // Create a simple entity w/o a prototype
+  // to faciliate collision detection.
   var reset = utils.makeA({}, {
     col: 0,
     row: 1,
@@ -72,6 +76,11 @@ board.on('ready', function() {
     score = 0;
   }
 
+  function drawEntity(entity) {
+    lcd.cursor(entity.row, entity.col);
+    lcd.print(entity.char);
+  }
+
   function updateCoins() {
     coins.forEach(function(coin) {
       if (utils.areColliding(coin, player)) {
@@ -82,32 +91,36 @@ board.on('ready', function() {
       if (coin.shouldReset()) {
         coin.reset();
       }
-      lcd.cursor(coin.row, coin.col);
-      lcd.print(coin.char);
+      drawEntity(coin);
     });
   }
 
   function updatePlayer() {
-    lcd.cursor(player.row, player.col);
-    lcd.print(player.char);
+    drawEntity(player);
   }
 
   function updateScore() {
-    lcd.cursor(0, constants.LAST_COL_IDX - 1);
-    lcd.print(_.padLeft(score, 2, 0));
+    drawEntity({
+      row: 0,
+      col: constants.LAST_COL_IDX - 1,
+      char: _.padLeft(score, 2, 0)
+    });
   }
 
   function updateReset() {
-    lcd.cursor(reset.row, reset.col);
-    lcd.print(reset.char);
     if (utils.areColliding(reset, player)) {
       resetScore();
+    } else {
+      drawEntity(reset);
     }
   }
 
   function updateMessage() {
-    lcd.cursor(0, 4);
-    lcd.print('You win.');
+    drawEntity({
+      row: 0,
+      col: 4,
+      char: 'You win.'
+    });
   }
 
   function tick() {
@@ -127,6 +140,8 @@ board.on('ready', function() {
   }
 
   function initialize() {
+    winningScore = 50;
+    refreshRate = 300;
     resetScore();
     lcd.useChar('cent');
     lcd.useChar('smile');
