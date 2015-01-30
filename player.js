@@ -15,8 +15,6 @@ var player = utils.makeEventable({
   },
 
   init: function(opts) {
-    this.col = 0;
-    this.row = 1;
     this.prevCol = this.col;
     return this;
   },

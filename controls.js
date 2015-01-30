@@ -3,9 +3,6 @@ var utils = require('./utils');
 var controls = utils.makeEventable({
 
   init: function(opts) {
-    this.knob = opts.knob;
-    this.min  = opts.min;
-    this.max  = opts.max;
     this.cur  = this.min;
     this.listenForChanges();
     return this;
