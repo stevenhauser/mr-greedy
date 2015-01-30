@@ -1,59 +1,55 @@
-var five = require('johnny-five');
+var five            = require('johnny-five');
+var playerCreator   = require('./player');
+var controlsCreator = require('./controls');
+var utils           = require('./utils');
+
+var log = console.log.bind(console);
+
+log('I…AM…RUN-NING');
+
 var board = new five.Board();
-
-console.log( 'I…AM…RUN-NING' );
-
 board.on('ready', function() {
 
-  console.log( 'here we goooooooo!' );
+  log('here we goooooooo!');
 
   var lcd = new five.LCD({
     pins: [12, 11, 2, 3, 4, 5]
   });
 
-  var knob = new five.Sensor({
-    pin: 'A0',
-    freq: 50,
-    threshold: 5
+  lcd.noAutoscroll();
+
+  var player = playerCreator.createPlayer({
+    leftChar: '<',
+    rightChar: '>',
+    stillChar: '^'
   });
 
-  knob.scale(100, 1000).on('data', function() {
-    opts.tickDur = this.value;
+  var controls = controlsCreator.createControls({
+    knob: new five.Sensor({
+      pin: 'A0',
+      freq: 50,
+      threshold: 5
+    }),
+    min: 0,
+    max: 15
   });
 
-  var curIdx = 0;
-  var opts = {
-    tickDur: 1000,
-    words: []
-  };
+  controls.on('changed', player.move.bind(player));
 
-  function lastWordIdx() {
-    return opts.words.length - 1;
-  }
-
-  function printNextWord() {
-    lcd.clear().print(opts.words[curIdx] || '');
-  }
-
-  function prepNextWord() {
-    curIdx++;
-    if (curIdx > lastWordIdx()) { curIdx = 0; }
-  }
-
+  var refreshRate = 100;
   function tick() {
-    setTimeout(function() {
-      printNextWord();
-      prepNextWord();
-      tick();
-    }, opts.tickDur);
+    lcd.clear();
+    lcd.cursor(1, player.loc);
+    lcd.print(player.char);
+    setTimeout(tick, refreshRate);
   }
 
   tick();
 
   this.repl.inject({
     lcd: lcd,
-    knob: knob,
-    opts: opts
+    player: player,
+    controls: controls
   });
 
 });
