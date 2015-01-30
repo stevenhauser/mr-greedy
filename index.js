@@ -141,7 +141,7 @@ board.on('ready', function() {
 
   function initialize() {
     winningScore = 50;
-    refreshRate = 300;
+    refreshRate = 200;
     resetScore();
     lcd.useChar('cent');
     lcd.useChar('smile');
