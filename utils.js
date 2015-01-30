@@ -13,3 +13,10 @@ exports.makeEventable = function(obj) {
   _.extend(obj, EE.prototype);
   return obj;
 };
+
+exports.areColliding = function(entity1, entity2) {
+  return (
+    (entity1.row === entity2.row) &&
+    (entity1.col === entity2.col)
+  );
+};

@@ -3,7 +3,7 @@ var utils = require('./utils');
 var player = utils.makeEventable({
 
   get dir() {
-    return this.loc - this.prevLoc;
+    return this.col - this.prevCol;
   },
 
   get char() {
@@ -15,14 +15,15 @@ var player = utils.makeEventable({
   },
 
   init: function(opts) {
-    this.loc = 0;
-    this.prevLoc = this.loc;
+    this.col = 0;
+    this.row = 1;
+    this.prevCol = this.col;
     return this;
   },
 
-  move: function(loc) {
-    this.prevLoc = this.loc;
-    this.loc = loc;
+  move: function(col) {
+    this.prevCol = this.col;
+    this.col = col;
     return this;
   }
 
